@@ -18,3 +18,7 @@ body {
   padding: 20px;
   gap: 20px;
 }
+
+.cursor-pointer {
+  cursor: pointer;
+}

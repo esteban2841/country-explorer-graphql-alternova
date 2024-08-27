@@ -1,35 +1,91 @@
 <template lang="">
-    <table class="table w-100">
-      <thead>
-        <tr>
-          <th scope="col">Item</th>
-          <th scope="col">Name</th>
-          <th scope="col">Code</th>
-          <th scope="col">Capital</th>
-          <th scope="col">Continent</th>
-          <th scope="col">Currency</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(country, index) in props.data" :key="index" :id="country.code">
-          <th scope="row">{{ index }}</th>
-          <td>{{ country.name }}</td>
-          <td>{{ country.code }}</td>
-          <td>{{ country.capital }}</td>
-          <td>{{ country.continent.name }}</td>
-          <td>{{ country.currency }}</td>
-        </tr>
-      </tbody>
-    </table>
+  <section>
+    <div class="loader-containerw-100 h-50 d-flex justify-content-center align-items-center">
+      <div v-if="loading" class="loader"></div>
+    </div>
+    <div class="table-container w-100" v-if="!loading">
+      <table class="table w-100">
+        <thead>
+          <tr>
+            <th scope="col">Item</th>
+            <th scope="col">Name</th>
+            <th scope="col">Code</th>
+            <th scope="col">Capital</th>
+            <th scope="col">Continent</th>
+            <th scope="col">Currency</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            @click="handleRowCLick(country.code)"
+            v-for="(country, index) in props.data"
+            :key="index"
+            :id="country.code"
+            class="cursor-pointer"
+          >
+            <th scope="row">{{ index }}</th>
+            <td>{{ country.name }}</td>
+            <td>{{ country.code }}</td>
+            <td>{{ country.capital }}</td>
+            <td>{{ country.continent.name }}</td>
+            <td>{{ country.currency }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
 </template>
 <script setup lang="ts">
-    const props = defineProps({
-        data: {
-            type: Array,
-            default: ()=>[]
-        }
-    });
+import { useQuery } from '@vue/apollo-composable'
+import { GET_CONTRY } from '../../graphql/queries'
+import { ref } from 'vue'
+
+const props = defineProps({
+  data: {
+    type: Array,
+    default: () => []
+  },
+  loading: {
+    type: Boolean,
+    default: true
+  }
+})
+
+const handleRowCLick = (countryCode: string) => {
+  const variables = ref({
+    code: countryCode
+  })
+  const { result, loading, error } = useQuery(GET_CONTRY, variables)
+  console.log('TCL: handleRowCLick -> result', result, loading, error)
+}
 </script>
-<style lang="">
-    
+<style scoped>
+.loader {
+  width: 44.8px;
+  height: 44.8px;
+  position: relative;
+  transform: rotate(45deg);
+}
+
+.loader:before,
+.loader:after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50% 50% 0 50%;
+  background: #0000;
+  background-image: radial-gradient(circle 11.2px at 50% 50%, #0000 94%, #ff4747);
+}
+
+.loader:after {
+  animation: pulse-ytk0dhmd 1s infinite;
+  transform: perspective(336px) translateZ(0px);
+}
+
+@keyframes pulse-ytk0dhmd {
+  to {
+    transform: perspective(336px) translateZ(168px);
+    opacity: 0;
+  }
+}
 </style>
