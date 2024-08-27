@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { RouterLink, RouterView, useRouter } from 'vue-router'
+import { RouterLink, RouterView } from 'vue-router'
 import { ref, watch } from 'vue'
 import CustomInput from './components/atoms/CustomInput.vue'
 import { useQuery } from '@vue/apollo-composable'
@@ -8,14 +8,6 @@ import { FILTER_COUNTRY_BY_CODE, FILTER_COUNTRY_BY_NAME } from './graphql/querie
 const search = ref('')
 const variables = ref({})
 const searchedCountry = ref({})
-const router = useRouter()
-
-const detailViewRedirect = (routeName: string, country: object) => {
-  router.push({
-    name: routeName, // Use the name of the route
-    query: { ...country } // Pass the country code directly as a param
-  })
-}
 
 const handleSearchBarFilter = () => {
   const input = search.value.toLowerCase().trim()
@@ -32,7 +24,6 @@ const handleSearchBarFilter = () => {
             ...newVal['countries'][0]
           })
           searchedCountry.value = { ...newVal['countries'][0] }
-          detailViewRedirect('country', searchedCountry.value)
         }
       },
       { deep: true }
@@ -60,7 +51,6 @@ const handleSearchBarFilter = () => {
             ...newVal['countries'][0]
           })
           searchedCountry.value = { ...newVal['countries'][0] }
-          detailViewRedirect('country', searchedCountry.value)
         }
       },
       { deep: true }

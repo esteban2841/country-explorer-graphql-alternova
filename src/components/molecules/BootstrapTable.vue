@@ -37,8 +37,8 @@
 </template>
 <script setup lang="ts">
 import { useQuery } from '@vue/apollo-composable'
-import { GET_CONTRY } from '../../graphql/queries'
-import { ref } from 'vue'
+import { FILTER_COUNTRY_BY_CODE } from '../../graphql/queries'
+import { ref, watch } from 'vue'
 
 const props = defineProps({
   data: {
@@ -51,12 +51,24 @@ const props = defineProps({
   }
 })
 
+const emit = defineEmits(['redirect'])
+
 const handleRowCLick = (countryCode: string) => {
   const variables = ref({
     code: countryCode
   })
-  const { result, loading, error } = useQuery(GET_CONTRY, variables)
-  console.log('TCL: handleRowCLick -> result', result, loading, error)
+  const { result, loading, error } = useQuery(FILTER_COUNTRY_BY_CODE, variables)
+
+  watch(
+    result,
+    (newVal) => {
+      if (Object.keys(newVal).length > 0) {
+        console.log('TCL: handleRowCLick -> newVal', newVal)
+        emit('redirect', { ...newVal['countries'][0] })
+      }
+    },
+    { deep: true }
+  )
 }
 </script>
 <style scoped>
