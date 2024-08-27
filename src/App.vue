@@ -2,60 +2,15 @@
 import { RouterLink, RouterView } from 'vue-router'
 import { ref, watch } from 'vue'
 import CustomInput from './components/atoms/CustomInput.vue'
-import { useQuery } from '@vue/apollo-composable'
-import { FILTER_COUNTRY_BY_CODE, FILTER_COUNTRY_BY_NAME } from './graphql/queries'
+import { useCountriesStore } from './store'
 
 const search = ref('')
-const variables = ref({})
-const searchedCountry = ref({})
+
+const { filterByCountryCodeOrName } = useCountriesStore()
 
 const handleSearchBarFilter = () => {
   const input = search.value.toLowerCase().trim()
-
-  if (input == 2) {
-    variables.value.code = input.toUpperCase()
-    const { result, loading } = useQuery(FILTER_COUNTRY_BY_CODE, variables)
-
-    watch(
-      result,
-      (newVal, oldVal) => {
-        if (Object.keys(newVal).length > 0) {
-          console.log("TCL: handleSearchBarFilter ->  { ...newVal['countries'][0] }", {
-            ...newVal['countries'][0]
-          })
-          searchedCountry.value = { ...newVal['countries'][0] }
-        }
-      },
-      { deep: true }
-    )
-  }
-
-  if (input.length > 2) {
-    const firstLetter = input.charAt(0)
-
-    const firstLetterCap = firstLetter.toUpperCase()
-
-    const remainingLetters = input.slice(1)
-
-    const capitalizedWord = firstLetterCap + remainingLetters
-
-    variables.value.name = capitalizedWord
-
-    const { result, loading } = useQuery(FILTER_COUNTRY_BY_NAME, variables)
-
-    watch(
-      result,
-      (newVal, oldVal) => {
-        if (Object.keys(newVal).length > 0) {
-          console.log("TCL: handleSearchBarFilter ->  { ...newVal['countries'][0] }", {
-            ...newVal['countries'][0]
-          })
-          searchedCountry.value = { ...newVal['countries'][0] }
-        }
-      },
-      { deep: true }
-    )
-  }
+  filterByCountryCodeOrName(input)
 }
 </script>
 

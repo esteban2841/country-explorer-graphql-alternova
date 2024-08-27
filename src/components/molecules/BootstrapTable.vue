@@ -18,7 +18,7 @@
         <tbody>
           <tr
             @click="handleRowCLick(country.code)"
-            v-for="(country, index) in props.data"
+            v-for="(country, index) in countriesSelection"
             :key="index"
             :id="country.code"
             class="cursor-pointer"
@@ -38,7 +38,11 @@
 <script setup lang="ts">
 import { useQuery } from '@vue/apollo-composable'
 import { FILTER_COUNTRY_BY_CODE } from '../../graphql/queries'
-import { ref, watch } from 'vue'
+import { useCountriesStore } from '../../store/index'
+import { ref, watch, computed } from 'vue'
+import { Country } from '@/types'
+
+const { country, countries } = useCountriesStore()
 
 const props = defineProps({
   data: {
@@ -50,6 +54,17 @@ const props = defineProps({
     default: true
   }
 })
+
+const countriesRef = ref<Array<Country>>(props.data)
+
+watch(
+  country,
+  (newVal) => {
+    countriesRef.value = [{ ...country }]
+  },
+  { deep: true }
+)
+const countriesSelection = computed(() => props.data ?? [])
 
 const emit = defineEmits(['redirect'])
 

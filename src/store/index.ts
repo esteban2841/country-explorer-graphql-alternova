@@ -1,35 +1,69 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
-export interface Country {
-  name: string
-  code: string
-  capital: string
-  continent: Continent
-  currency: string
-}
-
-export interface Continent {
-  name: string
-  code: string
-}
+import { FILTER_COUNTRY_BY_CODE, FILTER_COUNTRY_BY_NAME } from '../graphql/queries'
+import { type Country } from '@/types'
+import { useQuery } from '@vue/apollo-composable'
+// import { inject } from 'vue'
 
 export const useCountriesStore = defineStore('countries', () => {
+  // // const { query } = inject('apollo')
+  // console.log('TCL: useCountriesStore -> query', query)
   const router = useRouter()
   const countries = ref<Array<Country>>([])
+  const country = ref<Country>({})
+  const variables = ref<Country>({})
 
   const setAllCountries = (data: Array<Country>) => {
-    console.log('TCL: setAllCountries -> data', data)
     countries.value = [...data]
   }
 
   const detailViewRedirect = (country: object) => {
-    console.log('TCL: detailViewRedirect -> routeName', country)
     router.push({
       name: 'country', // Use the name of the route
       query: { ...country } // Pass the country code directly as a param
     })
   }
 
-  return { countries, setAllCountries, detailViewRedirect }
+  const filterByCountryCodeOrName = (inputParam: string) => {
+    if (inputParam.length == 2) {
+      variables.value.code = inputParam.toUpperCase()
+      const { result, loading } = useQuery(FILTER_COUNTRY_BY_CODE, variables)
+      watch(
+        result,
+        (newVal: any) => {
+          if (Object.keys(newVal).length > 0) {
+            country.value = { ...newVal['countries'][0] }
+          }
+        },
+        { deep: true }
+      )
+    }
+
+    if (inputParam.length > 2) {
+      const firstLetter = inputParam.charAt(0)
+
+      const firstLetterCap = firstLetter.toUpperCase()
+
+      const remainingLetters = inputParam.slice(1)
+
+      const capitalizedWord = firstLetterCap + remainingLetters
+
+      variables.value.name = capitalizedWord
+
+      const { result, loading } = useQuery(FILTER_COUNTRY_BY_NAME, variables)
+
+      watch(
+        result,
+        (newVal: any) => {
+          if (Object.keys(newVal).length > 0) {
+            country.value = { ...newVal['countries'][0] }
+          }
+        },
+        { deep: true }
+      )
+    }
+  }
+
+  return { country, countries, setAllCountries, detailViewRedirect, filterByCountryCodeOrName }
 })

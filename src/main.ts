@@ -1,6 +1,6 @@
 import './assets/main.css'
 
-import { createApp, provide, h } from 'vue'
+import { createApp, provide } from 'vue'
 import { DefaultApolloClient } from '@vue/apollo-composable'
 import App from './App.vue'
 import router from './router'
@@ -11,17 +11,11 @@ import bootstrap from 'bootstrap/dist/js/bootstrap.bundle.js'
 
 const pinia = createPinia()
 
-const app = createApp({
-  setup() {
-    provide(DefaultApolloClient, apolloClient)
-  },
-
-  render: () => h(App)
-})
+const app = createApp(App)
+  .provide(DefaultApolloClient, apolloClient)
+  .provide('apollo', apolloClient)
   .use(router)
-  .use(pinia)
   .use(bootstrap)
-
-app.provide(DefaultApolloClient, apolloClient)
+  .use(pinia)
 
 app.mount('#app')
