@@ -1,6 +1,6 @@
 <template lang="">
   <section>
-    <div class="loader-containerw-100 h-50 d-flex justify-content-center align-items-center">
+    <div class="loader-container w-100 h-50 d-flex justify-content-center align-items-center">
       <div v-if="loading" class="loader"></div>
     </div>
     <div class="table-container w-100" v-if="!loading">
@@ -39,32 +39,31 @@
 import { useQuery } from '@vue/apollo-composable'
 import { FILTER_COUNTRY_BY_CODE } from '../../graphql/queries'
 import { useCountriesStore } from '../../store/index'
-import { ref, watch, computed } from 'vue'
-import { Country } from '@/types'
-
-const { country, countries } = useCountriesStore()
+import { ref, watch } from 'vue'
+import { type Country } from '@/types'
 
 const props = defineProps({
   data: {
-    type: Array,
-    default: () => []
+    type: Array<Country>,
+    default: []
   },
   loading: {
     type: Boolean,
     default: true
   }
 })
+// console.log('TCL: props', props)
+const store = useCountriesStore()
+const countriesSelection = ref<Array<Country>>([...props.data])
 
-const countriesRef = ref<Array<Country>>(props.data)
-
-watch(
-  country,
-  (newVal) => {
-    countriesRef.value = [{ ...country }]
+store.$subscribe(
+  (state, mutations) => {
+    console.log('TCL: state', state, mutations)
+    countriesSelection.value = mutations.countries
+    // const {countries} = state
   },
-  { deep: true }
+  { detached: true }
 )
-const countriesSelection = computed(() => props.data ?? [])
 
 const emit = defineEmits(['redirect'])
 

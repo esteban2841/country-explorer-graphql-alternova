@@ -7,7 +7,6 @@ import { LIST_COUNTRIES } from '../graphql/queries'
 
 const { setAllCountries, detailViewRedirect } = useCountriesStore()
 const { result, loading } = useQuery(LIST_COUNTRIES)
-console.log('TCL: result HOME LIST COUNTRIES', result)
 const countries = computed(() => result.value?.countries ?? [])
 const isLoading = computed(() => loading.value ?? true)
 

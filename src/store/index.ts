@@ -32,8 +32,10 @@ export const useCountriesStore = defineStore('countries', () => {
       watch(
         result,
         (newVal: any) => {
+          console.log('TCL: filterByCountryCodeOrName -> newVal', newVal)
           if (Object.keys(newVal).length > 0) {
-            country.value = { ...newVal['countries'][0] }
+            const filteredCountries = newVal.countries
+            return (countries.value = [...filteredCountries])
           }
         },
         { deep: true }
@@ -41,6 +43,7 @@ export const useCountriesStore = defineStore('countries', () => {
     }
 
     if (inputParam.length > 2) {
+      console.log('TCL: filterByCountryCodeOrName -> inputParam', inputParam)
       const firstLetter = inputParam.charAt(0)
 
       const firstLetterCap = firstLetter.toUpperCase()
@@ -57,7 +60,9 @@ export const useCountriesStore = defineStore('countries', () => {
         result,
         (newVal: any) => {
           if (Object.keys(newVal).length > 0) {
-            country.value = { ...newVal['countries'][0] }
+            const filteredCountries = newVal.countries
+            console.log('TCL: filterByCountryCodeOrName -> countries', countries)
+            return (countries.value = [...filteredCountries])
           }
         },
         { deep: true }
@@ -65,5 +70,11 @@ export const useCountriesStore = defineStore('countries', () => {
     }
   }
 
-  return { country, countries, setAllCountries, detailViewRedirect, filterByCountryCodeOrName }
+  return {
+    country,
+    countries,
+    setAllCountries,
+    detailViewRedirect,
+    filterByCountryCodeOrName
+  }
 })
