@@ -1,18 +1,19 @@
 <template lang="">
-  <section>
-    <div class="loader-container w-100 h-50 d-flex justify-content-center align-items-center">
+  <section class="w-100 h-100 d-flex flex-column justify-content-center align-items-center">
+    <div class="loader-container w-100 d-flex justify-content-center align-items-center">
       <div v-if="loading" class="loader"></div>
     </div>
-    <div class="table-container w-100" v-if="!loading">
+    <div class="table-container w-100 p-4" v-if="!loading">
       <table class="table w-100">
         <thead>
           <tr>
             <th scope="col">Item</th>
             <th scope="col">Name</th>
             <th scope="col">Code</th>
+            <th scope="col">Flag</th>
             <th scope="col">Capital</th>
-            <th scope="col">Continent</th>
             <th scope="col">Currency</th>
+            <th scope="col">Continent</th>
           </tr>
         </thead>
         <tbody>
@@ -26,9 +27,15 @@
             <th scope="row">{{ index }}</th>
             <td>{{ country.name }}</td>
             <td>{{ country.code }}</td>
+            <td>
+              <img
+                :alt="`${country.name} flag`"
+                :src="`https://flagcdn.com/28x21/${country.code.toLowerCase()}.png`"
+              />
+            </td>
             <td>{{ country.capital }}</td>
-            <td>{{ country.continent.name }}</td>
             <td>{{ country.currency }}</td>
+            <td>{{ country.continent.name }}</td>
           </tr>
         </tbody>
       </table>

@@ -7,6 +7,18 @@ const LIST_COUNTRIES = gql`
       code
       capital
       currency
+      emoji
+      emojiU
+      native
+      states {
+        name
+        code
+      }
+      languages {
+        name
+        code
+        native
+      }
       continent {
         code
         name
@@ -22,6 +34,18 @@ const FILTER_COUNTRY_BY_CODE = gql`
       code
       capital
       currency
+      emoji
+      emojiU
+      native
+      states {
+        name
+        code
+      }
+      languages {
+        name
+        code
+        native
+      }
       continent {
         code
         name
@@ -37,6 +61,18 @@ const FILTER_COUNTRY_BY_NAME = gql`
       code
       capital
       currency
+      emoji
+      emojiU
+      native
+      states {
+        name
+        code
+      }
+      languages {
+        name
+        code
+        native
+      }
       continent {
         code
         name
@@ -47,15 +83,24 @@ const FILTER_COUNTRY_BY_NAME = gql`
 const GET_CONTRY = gql`
   query Country($code: ID!) {
     country(code: $code) {
-      code
       name
+      code
       capital
-      emoji
       currency
+      emoji
+      emojiU
+      native
+      states {
+        name
+        code
+      }
       languages {
         name
+        code
+        native
       }
       continent {
+        code
         name
       }
     }
