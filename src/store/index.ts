@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { FILTER_COUNTRY_BY_CODE, FILTER_COUNTRY_BY_NAME } from '../graphql/queries'
+import { FILTER_COUNTRY_BY_CODE, FILTER_COUNTRY_BY_NAME, LIST_COUNTRIES } from '../graphql/queries'
 import { type Country } from '@/types'
 import { useQuery } from '@vue/apollo-composable'
 // import { inject } from 'vue'
@@ -9,11 +9,18 @@ import { useQuery } from '@vue/apollo-composable'
 export const useCountriesStore = defineStore('countries', () => {
   const router = useRouter()
   const countries = ref<Array<Country>>([])
+  const filteredCountries = ref<Array<Country>>([])
   const country = ref<Country>({})
   const variables = ref<Country>({})
+  const loading = ref<boolean>(true)
 
-  const setAllCountries = (data: Array<Country>) => {
-    countries.value = [...data]
+  const setAllCountries = () => {
+    const { result, loading: isLoading } = useQuery(LIST_COUNTRIES)
+
+    watch(result, (newVal) => {
+      countries.value = [...newVal.countries]
+      loading.value = isLoading.value
+    })
   }
 
   const detailViewRedirect = (country: object) => {
@@ -68,6 +75,8 @@ export const useCountriesStore = defineStore('countries', () => {
   return {
     country,
     countries,
+    loading,
+    filteredCountries,
     setAllCountries,
     detailViewRedirect,
     filterByCountryCodeOrName

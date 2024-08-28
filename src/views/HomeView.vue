@@ -1,23 +1,32 @@
 <script setup lang="ts">
 import BootstrapTable from '../components/molecules/BootstrapTable.vue'
 import { useCountriesStore } from '../store/index'
-import { useQuery } from '@vue/apollo-composable'
-import { computed, watch } from 'vue'
-import { LIST_COUNTRIES } from '../graphql/queries'
+import { ref } from 'vue'
+import { type Country } from '@/types'
 
-const { setAllCountries, detailViewRedirect } = useCountriesStore()
-const { result, loading } = useQuery(LIST_COUNTRIES)
-const countries = computed(() => result.value?.countries ?? [])
-const isLoading = computed(() => loading.value ?? true)
+const store = useCountriesStore()
+const { detailViewRedirect } = useCountriesStore()
 
-watch(countries, (newVal, oldVal) => {
-  setAllCountries(newVal || oldVal)
-})
+const countriesObserver = ref<Array<Country>>([])
+const loaderObserver = ref<boolean>(true)
+
+store.$subscribe(
+  (state, mutations) => {
+    console.log('TCL: mutations', mutations)
+    countriesObserver.value = mutations.countries
+    loaderObserver.value = mutations.loading
+  },
+  { detached: true }
+)
 </script>
 
 <template>
   <main class="w-100 d-flex flex-column justify-content-center align-items-center">
     <h1>Countries list table</h1>
-    <BootstrapTable @redirect="detailViewRedirect" :data="countries" :loading="isLoading" />
+    <BootstrapTable
+      @redirect="detailViewRedirect"
+      :data="countriesObserver"
+      :loading="loaderObserver"
+    />
   </main>
 </template>

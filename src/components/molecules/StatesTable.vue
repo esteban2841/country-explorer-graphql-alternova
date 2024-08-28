@@ -32,8 +32,6 @@ const props = defineProps({
   }
 })
 
-const states = props.data.map((state, index) => {
-  console.log('TCL: state', state[index])
-})
+const states = props.data.map((state, index) => {})
 </script>
 <style scoped></style>

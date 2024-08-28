@@ -32,7 +32,6 @@ interface Props {
 
 const props = defineProps<Props>()
 const states = computed(() => [...props.country.states])
-console.log('TCL: states', states)
 const countryFlag = `https://flagcdn.com/w2560/${props.country.code.toLowerCase()}.png`
 </script>
 <style lang="css"></style>
