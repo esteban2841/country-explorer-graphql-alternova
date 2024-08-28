@@ -19,7 +19,7 @@ export const useCountriesStore = defineStore('countries', () => {
   const detailViewRedirect = (country: object) => {
     router.push({
       name: 'country', // Use the name of the route
-      query: { country: JSON.stringify(country) } // Pass the country code directly as a param
+      query: { country: encodeURI(JSON.stringify(country)) } // Pass the country code directly as a param
     })
   }
 

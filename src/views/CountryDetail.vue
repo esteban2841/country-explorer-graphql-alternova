@@ -7,7 +7,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 const router = useRouter()
-const queryCountryParse = JSON.parse(router.currentRoute.value.query.country)
+const queryCountryParse = JSON.parse(decodeURI(router.currentRoute.value.query.country))
 const country = ref(queryCountryParse)
 import CountryDetailCard from '@/components/atoms/CountryDetailCard.vue'
 </script>
