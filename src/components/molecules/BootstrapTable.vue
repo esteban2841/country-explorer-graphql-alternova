@@ -1,10 +1,15 @@
 <template lang="">
-  <section class="w-100 h-100 d-flex flex-column justify-content-center align-items-center">
-    <div class="loader-container w-100 d-flex justify-content-center align-items-center">
-      <div v-if="loading" class="loader"></div>
+  <section
+    class="position-relative w-100 h-100 d-flex flex-column justify-content-center align-items-center"
+  >
+    <div
+      v-if="loading"
+      class="loader-containe position-relative margin-top-50 w-100 d-flex justify-content-center align-items-center"
+    >
+      <div class="loader"></div>
     </div>
     <div class="table-container w-100 p-4" v-if="!loading">
-      <table class="table w-100">
+      <table class="table table-dark table-responsive rounded w-100">
         <thead>
           <tr>
             <th scope="col">Item</th>
@@ -59,15 +64,12 @@ const props = defineProps({
     default: true
   }
 })
-// console.log('TCL: props', props)
 const store = useCountriesStore()
 const countriesSelection = ref<Array<Country>>([...props.data])
 
 store.$subscribe(
   (state, mutations) => {
-    console.log('TCL: state', state, mutations)
     countriesSelection.value = mutations.countries
-    // const {countries} = state
   },
   { detached: true }
 )
@@ -84,7 +86,6 @@ const handleRowCLick = (countryCode: string) => {
     result,
     (newVal) => {
       if (Object.keys(newVal).length > 0) {
-        console.log('TCL: handleRowCLick -> newVal', newVal)
         emit('redirect', { ...newVal['countries'][0] })
       }
     },

@@ -4,10 +4,11 @@
   </div>
 </template>
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 const router = useRouter()
-const country = ref({ ...router.currentRoute.value.query })
+const queryCountryParse = JSON.parse(router.currentRoute.value.query.country)
+const country = ref(queryCountryParse)
 import CountryDetailCard from '@/components/atoms/CountryDetailCard.vue'
 </script>
 <style>

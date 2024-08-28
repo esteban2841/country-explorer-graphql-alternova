@@ -7,8 +7,6 @@ import { useQuery } from '@vue/apollo-composable'
 // import { inject } from 'vue'
 
 export const useCountriesStore = defineStore('countries', () => {
-  // // const { query } = inject('apollo')
-  // console.log('TCL: useCountriesStore -> query', query)
   const router = useRouter()
   const countries = ref<Array<Country>>([])
   const country = ref<Country>({})
@@ -21,7 +19,7 @@ export const useCountriesStore = defineStore('countries', () => {
   const detailViewRedirect = (country: object) => {
     router.push({
       name: 'country', // Use the name of the route
-      query: { ...country } // Pass the country code directly as a param
+      query: { country: JSON.stringify(country) } // Pass the country code directly as a param
     })
   }
 
@@ -32,7 +30,6 @@ export const useCountriesStore = defineStore('countries', () => {
       watch(
         result,
         (newVal: any) => {
-          console.log('TCL: filterByCountryCodeOrName -> newVal', newVal)
           if (Object.keys(newVal).length > 0) {
             const filteredCountries = newVal.countries
             return (countries.value = [...filteredCountries])
@@ -43,7 +40,6 @@ export const useCountriesStore = defineStore('countries', () => {
     }
 
     if (inputParam.length > 2) {
-      console.log('TCL: filterByCountryCodeOrName -> inputParam', inputParam)
       const firstLetter = inputParam.charAt(0)
 
       const firstLetterCap = firstLetter.toUpperCase()
@@ -61,7 +57,6 @@ export const useCountriesStore = defineStore('countries', () => {
         (newVal: any) => {
           if (Object.keys(newVal).length > 0) {
             const filteredCountries = newVal.countries
-            console.log('TCL: filterByCountryCodeOrName -> countries', countries)
             return (countries.value = [...filteredCountries])
           }
         },

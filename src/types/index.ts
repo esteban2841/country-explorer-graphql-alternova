@@ -4,16 +4,16 @@ interface Country {
   capital?: string
   continent?: Continent
   currency?: string
-  languages?: Language[]
-  states?: State[]
+  languages?: Array<Language>
+  states?: Array<State>
   native?: string
-  emoji: string
-  emojiU: string
+  emoji?: string
+  emojiU?: string
 }
 
 interface State {
-  name: string
-  code: string
+  name?: string
+  code?: string
 }
 interface Language {
   name: string
