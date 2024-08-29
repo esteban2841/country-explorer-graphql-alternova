@@ -60,7 +60,6 @@ const loadingState = ref<boolean>()
 
 store.$subscribe(
   (state, mutations) => {
-    console.log('TCL: mutations', mutations)
     loadingState.value = mutations.loading
     countriesSelection.value =
       mutations.filteredCountries.length > 0 ? mutations.filteredCountries : mutations.countries

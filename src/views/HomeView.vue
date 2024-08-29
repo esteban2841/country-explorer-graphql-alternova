@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import BootstrapTable from '../components/molecules/BootstrapTable.vue'
+import CountriesTable from '../components/molecules/CountriesTable.vue'
 import { useCountriesStore } from '../store/index'
 import { ref, onMounted } from 'vue'
 import { type Country } from '@/types'
@@ -29,7 +29,7 @@ store.$subscribe(
   <KeepAlive>
     <main class="w-100 d-flex flex-column justify-content-center align-items-center">
       <h1>Countries list table</h1>
-      <BootstrapTable
+      <CountriesTable
         @redirect="(e) => routerNavigator(e, 'country')"
         :data="countriesObserver"
         :loading="loaderObserver"

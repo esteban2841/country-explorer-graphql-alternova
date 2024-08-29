@@ -25,7 +25,6 @@ export const useCountriesStore = defineStore('countries', () => {
     const { result, loading: isLoading } = useQuery(LIST_COUNTRIES)
 
     watch(result, (newVal) => {
-      console.log('TCL: setAllCountries -> newVal', newVal)
       if (newVal.countries) {
         countries.value = [...newVal.countries]
         loading.value = isLoading.value
@@ -54,18 +53,15 @@ export const useCountriesStore = defineStore('countries', () => {
   const filterSelect = (type: string) => {
     if (type == 'asc') {
       const sorted = conditionFilterAscDes({ type, data: [...countries.value], property: 'name' })
-      console.log('TCL: filterSelect -> sorted', sorted)
       countries.value = sorted
     }
     if (type == 'des') {
       const sorted = conditionFilterAscDes({ type, data: [...countries.value], property: 'name' })
-      console.log('TCL: filterSelect -> sorted', sorted)
       countries.value = sorted
     }
   }
 
   const filterByCountryCodeOrName = (inputParam: string) => {
-    console.log('TCL: filterByCountryCodeOrName -> inputParam', inputParam)
     if (inputParam.length == 2) {
       variables.value.code = inputParam.toUpperCase()
       const { result } = useQuery(FILTER_COUNTRY_BY_CODE, variables)
