@@ -8,6 +8,7 @@ const cache = new InMemoryCache()
 
 // Create the apollo client
 const apolloClient = new ApolloClient({
+  // not implemented uri enviroment variable due to the reason that is a public api
   link: new HttpLink({ uri: 'https://countries.trevorblades.com' }),
   cache
 })
