@@ -6,10 +6,12 @@
     <div
       class="country-detail-container position-relative p-4 w-100 h-100 d-flex flex-row justify-content-between align-items-center"
     >
-      <div class="w-50 h-100 d-flex flex-row justify-content-between align-items-center">
+      <div
+        class="flag-container w-50 h-100 d-flex flex-row md justify-content-between align-items-center"
+      >
         <img class="w-100 object-contain" :src="countryFlag" alt="" />
       </div>
-      <div class="w-50 h-100 p-4">
+      <div class="detail-text-container w-50 h-100 p-4">
         <h1 class="text-center p-4">{{ props.country.name }}</h1>
         <div class="card-body gap d-flex flex-column justify-content-between align-items-center">
           <div class="d-flex flex-row justify-content-between country-prop align-items-center w-50">
@@ -69,5 +71,19 @@ const countryFlag = `https://flagcdn.com/w2560/${props.country.code.toLowerCase(
 }
 .country-prop p {
   margin: 0px !important;
+}
+@media (max-width: 768px) {
+  .country-detail-container {
+    flex-direction: column !important;
+  }
+  .flag-container {
+    width: 100% !important;
+  }
+  .detail-text-container {
+    width: 100% !important;
+  }
+  .country-prop {
+    width: 100% !important;
+  }
 }
 </style>

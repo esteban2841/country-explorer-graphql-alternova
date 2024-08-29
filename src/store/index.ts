@@ -5,6 +5,7 @@ import { FILTER_COUNTRY_BY_CODE, FILTER_COUNTRY_BY_NAME, LIST_COUNTRIES } from '
 import { type Country } from '@/types'
 import { useQuery } from '@vue/apollo-composable'
 import Swal from 'sweetalert2'
+import { conditionFilterAscDes } from '@/helpers'
 
 export const useCountriesStore = defineStore('countries', () => {
   const storedCountries = localStorage.getItem('countries')
@@ -48,6 +49,19 @@ export const useCountriesStore = defineStore('countries', () => {
       name: routeName, // Use the name of the route
       query: { country: encodeURI(JSON.stringify(country)) } // Pass the country code directly as a param
     })
+  }
+
+  const filterSelect = (type: string) => {
+    if (type == 'asc') {
+      const sorted = conditionFilterAscDes({ type, data: [...countries.value], property: 'name' })
+      console.log('TCL: filterSelect -> sorted', sorted)
+      countries.value = sorted
+    }
+    if (type == 'des') {
+      const sorted = conditionFilterAscDes({ type, data: [...countries.value], property: 'name' })
+      console.log('TCL: filterSelect -> sorted', sorted)
+      countries.value = sorted
+    }
   }
 
   const filterByCountryCodeOrName = (inputParam: string) => {
@@ -110,6 +124,7 @@ export const useCountriesStore = defineStore('countries', () => {
     countries,
     loading,
     filteredCountries,
+    filterSelect,
     resetAllFilters,
     setAllCountries,
     routerNavigator,

@@ -27,7 +27,11 @@
       />
       <button @click="handleSearchBarFilter" class="btn btn-dark w-25 px-4 py-2">Search</button>
       <button @click="clearFilters" class="btn btn-dark w-25 py-2">
-        <img class="object-cover wider-image w-25" src="@/assets/reset.png" alt="clear" />
+        <img
+          class="reset-icon object-cover wider-image w-25"
+          src="@/assets/reset.png"
+          alt="clear"
+        />
       </button>
     </div>
   </nav>
@@ -35,6 +39,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import CustomInput from '@/components/atoms/CustomInput.vue'
+import CustomSelect from '@/components/atoms/CustomSelect.vue'
 import { useCountriesStore } from '@/store'
 import { useRouter } from 'vue-router'
 
@@ -43,8 +48,29 @@ const currentRoute = computed(() => router.currentRoute.value)
 
 const search = ref('')
 
-const { filterByCountryCodeOrName, resetAllFilters } = useCountriesStore()
+const { filterByCountryCodeOrName, resetAllFilters, filterSelect } = useCountriesStore()
 
+const selects = ref([
+  {
+    name: 'Order Countries',
+    label: 'Filter by',
+    options: [
+      {
+        name: 'Order asc',
+        id: 'asc'
+      },
+      {
+        name: 'Order desc',
+        id: 'des'
+      }
+    ]
+  }
+])
+
+const handleSelectChange = (event) => {
+  const { value } = event.target
+  filterSelect(value)
+}
 const handleSearchBarFilter = () => {
   const input = search.value.toLowerCase().trim()
   filterByCountryCodeOrName(input)
@@ -59,5 +85,19 @@ const clearFilters = () => {
 }
 .earth-icon-container:hover {
   transform: scale(1.2);
+}
+@media (max-width: 768px) {
+  .search-bar {
+    display: flex;
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 10px !important;
+  }
+  .btn {
+    width: 100% !important;
+  }
+  .reset-icon {
+    width: 30px !important;
+  }
 }
 </style>
