@@ -39,7 +39,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import CustomInput from '@/components/atoms/CustomInput.vue'
-import CustomSelect from '@/components/atoms/CustomSelect.vue'
 import { useCountriesStore } from '@/store'
 import { useRouter } from 'vue-router'
 
@@ -48,29 +47,8 @@ const currentRoute = computed(() => router.currentRoute.value)
 
 const search = ref('')
 
-const { filterByCountryCodeOrName, resetAllFilters, filterSelect } = useCountriesStore()
+const { filterByCountryCodeOrName, resetAllFilters } = useCountriesStore()
 
-const selects = ref([
-  {
-    name: 'Order Countries',
-    label: 'Filter by',
-    options: [
-      {
-        name: 'Order asc',
-        id: 'asc'
-      },
-      {
-        name: 'Order desc',
-        id: 'des'
-      }
-    ]
-  }
-])
-
-const handleSelectChange = (event) => {
-  const { value } = event.target
-  filterSelect(value)
-}
 const handleSearchBarFilter = () => {
   const input = search.value.toLowerCase().trim()
   filterByCountryCodeOrName(input)
