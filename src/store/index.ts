@@ -4,28 +4,47 @@ import { useRouter } from 'vue-router'
 import { FILTER_COUNTRY_BY_CODE, FILTER_COUNTRY_BY_NAME, LIST_COUNTRIES } from '../graphql/queries'
 import { type Country } from '@/types'
 import { useQuery } from '@vue/apollo-composable'
-// import { inject } from 'vue'
 
 export const useCountriesStore = defineStore('countries', () => {
+  const storedCountries = localStorage.getItem('countries')
   const router = useRouter()
-  const countries = ref<Array<Country>>([])
   const filteredCountries = ref<Array<Country>>([])
+  const countries = ref<Array<Country>>(storedCountries)
   const country = ref<Country>({})
   const variables = ref<Country>({})
   const loading = ref<boolean>(true)
 
   const setAllCountries = () => {
+    if (storedCountries) {
+      countries.value = JSON.parse(storedCountries)
+      loading.value = false
+      return
+    }
     const { result, loading: isLoading } = useQuery(LIST_COUNTRIES)
 
     watch(result, (newVal) => {
-      countries.value = [...newVal.countries]
-      loading.value = isLoading.value
+      console.log('TCL: setAllCountries -> newVal', newVal)
+      if (newVal.countries) {
+        countries.value = [...newVal.countries]
+        loading.value = isLoading.value
+        countries.value.length && localStorage.setItem('countries', JSON.stringify(countries.value))
+      }
     })
   }
 
-  const detailViewRedirect = (country: object) => {
+  const resetAllFilters = () => {
+    filteredCountries.value = []
+  }
+
+  const routerNavigator = (country?: object, routeName?: string) => {
+    if (!Object.keys(country).length) {
+      router.push({
+        name: routeName // Use the name of the route
+      })
+      return
+    }
     router.push({
-      name: 'country', // Use the name of the route
+      name: routeName, // Use the name of the route
       query: { country: encodeURI(JSON.stringify(country)) } // Pass the country code directly as a param
     })
   }
@@ -38,8 +57,7 @@ export const useCountriesStore = defineStore('countries', () => {
         result,
         (newVal: any) => {
           if (Object.keys(newVal).length > 0) {
-            const filteredCountries = newVal.countries
-            return (countries.value = [...filteredCountries])
+            filteredCountries.value = [...newVal.countries]
           }
         },
         { deep: true }
@@ -63,8 +81,7 @@ export const useCountriesStore = defineStore('countries', () => {
         result,
         (newVal: any) => {
           if (Object.keys(newVal).length > 0) {
-            const filteredCountries = newVal.countries
-            return (countries.value = [...filteredCountries])
+            filteredCountries.value = [...newVal.countries]
           }
         },
         { deep: true }
@@ -77,8 +94,9 @@ export const useCountriesStore = defineStore('countries', () => {
     countries,
     loading,
     filteredCountries,
+    resetAllFilters,
     setAllCountries,
-    detailViewRedirect,
+    routerNavigator,
     filterByCountryCodeOrName
   }
 })

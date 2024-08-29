@@ -1,5 +1,6 @@
-<template lang="">
+<template lang="html">
   <section
+    v-if="props.data.length"
     class="text-white position-relative w-100 h-100 d-flex flex-column justify-content-center align-items-center"
   >
     <div class="table-container w-100 p-4">
@@ -31,7 +32,5 @@ const props = defineProps({
     default: []
   }
 })
-
-const states = props.data.map((state, index) => {})
 </script>
 <style scoped></style>

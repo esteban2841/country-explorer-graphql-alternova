@@ -3,12 +3,12 @@
     class="position-relative w-100 h-100 d-flex flex-column justify-content-center align-items-center"
   >
     <div
-      v-if="loading"
+      v-if="loadingState"
       class="loader-containe position-relative margin-top-50 w-100 d-flex justify-content-center align-items-center"
     >
       <div class="loader"></div>
     </div>
-    <div class="table-container w-100 p-4" v-if="!loading">
+    <div class="table-container w-100 p-4" v-if="!loadingState">
       <table class="table table-dark table-responsive rounded w-100">
         <thead>
           <tr>
@@ -54,22 +54,16 @@ import { useCountriesStore } from '../../store/index'
 import { ref, watch } from 'vue'
 import { type Country } from '@/types'
 
-const props = defineProps({
-  data: {
-    type: Array<Country>,
-    default: []
-  },
-  loading: {
-    type: Boolean,
-    default: true
-  }
-})
 const store = useCountriesStore()
-const countriesSelection = ref<Array<Country>>([...props.data])
+const countriesSelection = ref<Array<Country>>([])
+const loadingState = ref<boolean>()
 
 store.$subscribe(
   (state, mutations) => {
-    countriesSelection.value = mutations.countries
+    console.log('TCL: mutations', mutations)
+    loadingState.value = mutations.loading
+    countriesSelection.value =
+      mutations.filteredCountries.length > 0 ? mutations.filteredCountries : mutations.countries
   },
   { detached: true }
 )

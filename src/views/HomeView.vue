@@ -1,18 +1,23 @@
 <script setup lang="ts">
 import BootstrapTable from '../components/molecules/BootstrapTable.vue'
 import { useCountriesStore } from '../store/index'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { type Country } from '@/types'
 
+const { setAllCountries } = useCountriesStore()
+
+onMounted(() => {
+  setAllCountries()
+})
+
 const store = useCountriesStore()
-const { detailViewRedirect } = useCountriesStore()
+const { routerNavigator } = useCountriesStore()
 
 const countriesObserver = ref<Array<Country>>([])
 const loaderObserver = ref<boolean>(true)
 
 store.$subscribe(
   (state, mutations) => {
-    console.log('TCL: mutations', mutations)
     countriesObserver.value = mutations.countries
     loaderObserver.value = mutations.loading
   },
@@ -21,12 +26,14 @@ store.$subscribe(
 </script>
 
 <template>
-  <main class="w-100 d-flex flex-column justify-content-center align-items-center">
-    <h1>Countries list table</h1>
-    <BootstrapTable
-      @redirect="detailViewRedirect"
-      :data="countriesObserver"
-      :loading="loaderObserver"
-    />
-  </main>
+  <KeepAlive>
+    <main class="w-100 d-flex flex-column justify-content-center align-items-center">
+      <h1>Countries list table</h1>
+      <BootstrapTable
+        @redirect="(e) => routerNavigator(e, 'country')"
+        :data="countriesObserver"
+        :loading="loaderObserver"
+      />
+    </main>
+  </KeepAlive>
 </template>

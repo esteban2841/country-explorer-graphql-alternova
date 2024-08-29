@@ -38,12 +38,14 @@ const currentRoute = computed(() => router.currentRoute.value)
 
 const search = ref('')
 
-const { filterByCountryCodeOrName } = useCountriesStore()
+const { filterByCountryCodeOrName, resetAllFilters } = useCountriesStore()
 
 const handleSearchBarFilter = () => {
   const input = search.value.toLowerCase().trim()
   filterByCountryCodeOrName(input)
 }
-const clearFilters = () => {}
+const clearFilters = () => {
+  resetAllFilters()
+}
 </script>
 <style lang=""></style>
