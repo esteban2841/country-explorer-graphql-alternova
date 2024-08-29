@@ -4,12 +4,13 @@ import { useRouter } from 'vue-router'
 import { FILTER_COUNTRY_BY_CODE, FILTER_COUNTRY_BY_NAME, LIST_COUNTRIES } from '../graphql/queries'
 import { type Country } from '@/types'
 import { useQuery } from '@vue/apollo-composable'
+import Swal from 'sweetalert2'
 
 export const useCountriesStore = defineStore('countries', () => {
   const storedCountries = localStorage.getItem('countries')
   const router = useRouter()
   const filteredCountries = ref<Array<Country>>([])
-  const countries = ref<Array<Country>>(storedCountries)
+  const countries = ref<Array<Country>>([])
   const country = ref<Country>({})
   const variables = ref<Country>({})
   const loading = ref<boolean>(true)
@@ -37,7 +38,7 @@ export const useCountriesStore = defineStore('countries', () => {
   }
 
   const routerNavigator = (country?: object, routeName?: string) => {
-    if (!Object.keys(country).length) {
+    if (!Object.keys(country!).length) {
       router.push({
         name: routeName // Use the name of the route
       })
@@ -50,14 +51,22 @@ export const useCountriesStore = defineStore('countries', () => {
   }
 
   const filterByCountryCodeOrName = (inputParam: string) => {
+    console.log('TCL: filterByCountryCodeOrName -> inputParam', inputParam)
     if (inputParam.length == 2) {
       variables.value.code = inputParam.toUpperCase()
-      const { result, loading } = useQuery(FILTER_COUNTRY_BY_CODE, variables)
+      const { result } = useQuery(FILTER_COUNTRY_BY_CODE, variables)
       watch(
         result,
         (newVal: any) => {
-          if (Object.keys(newVal).length > 0) {
+          if (newVal.countries.length) {
             filteredCountries.value = [...newVal.countries]
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Country code does not exist, try with another code',
+              timer: 3000
+            })
           }
         },
         { deep: true }
@@ -75,13 +84,20 @@ export const useCountriesStore = defineStore('countries', () => {
 
       variables.value.name = capitalizedWord
 
-      const { result, loading } = useQuery(FILTER_COUNTRY_BY_NAME, variables)
+      const { result } = useQuery(FILTER_COUNTRY_BY_NAME, variables)
 
       watch(
         result,
         (newVal: any) => {
-          if (Object.keys(newVal).length > 0) {
+          if (newVal.countries.length) {
             filteredCountries.value = [...newVal.countries]
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Country name does not exist, try with another name',
+              timer: 3000
+            })
           }
         },
         { deep: true }

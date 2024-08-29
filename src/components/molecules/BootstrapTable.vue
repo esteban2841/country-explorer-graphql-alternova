@@ -74,7 +74,7 @@ const handleRowCLick = (countryCode: string) => {
   const variables = ref({
     code: countryCode
   })
-  const { result, loading, error } = useQuery(FILTER_COUNTRY_BY_CODE, variables)
+  const { result } = useQuery(FILTER_COUNTRY_BY_CODE, variables)
 
   watch(
     result,

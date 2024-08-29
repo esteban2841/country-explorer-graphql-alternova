@@ -80,31 +80,5 @@ const FILTER_COUNTRY_BY_NAME = gql`
     }
   }
 `
-const GET_CONTRY = gql`
-  query Country($code: ID!) {
-    country(code: $code) {
-      name
-      code
-      capital
-      currency
-      emoji
-      emojiU
-      native
-      states {
-        name
-        code
-      }
-      languages {
-        name
-        code
-        native
-      }
-      continent {
-        code
-        name
-      }
-    }
-  }
-`
 
-export { LIST_COUNTRIES, GET_CONTRY, FILTER_COUNTRY_BY_CODE, FILTER_COUNTRY_BY_NAME }
+export { LIST_COUNTRIES, FILTER_COUNTRY_BY_CODE, FILTER_COUNTRY_BY_NAME }

@@ -10,13 +10,36 @@
         <img class="w-100 object-contain" :src="countryFlag" alt="" />
       </div>
       <div class="w-50 h-100 p-4">
-        <h1 class="card-title">{{ props.country.name }}</h1>
-        <div class="card-body">
-          <p class="card-text">Native name: {{ props.country.native }}</p>
-          <p class="card-text">Code: {{ props.country.code }}</p>
-          <p class="card-text">Capital: {{ props.country.capital }}</p>
-          <p class="card-text">Currency: {{ props.country.currency }}</p>
-          <p class="card-text">Continent: {{ props.country.continent?.name }}</p>
+        <h1 class="text-center p-4">{{ props.country.name }}</h1>
+        <div class="card-body gap d-flex flex-column justify-content-between align-items-center">
+          <div class="d-flex flex-row justify-content-between country-prop align-items-center w-50">
+            <h5 class="">Native name:</h5>
+            <p>{{ props.country.native }}</p>
+          </div>
+          <div
+            class="d-flex flex-row justify-content-between country-prop text-center align-items-center w-50"
+          >
+            <h5 class="">Code:</h5>
+            <p>{{ props.country.code }}</p>
+          </div>
+          <div
+            class="d-flex flex-row justify-content-between country-prop text-center align-items-center w-50"
+          >
+            <h5 class="">Capital:</h5>
+            <p>{{ props.country.capital }}</p>
+          </div>
+          <div
+            class="d-flex flex-row justify-content-between country-prop text-center align-items-center w-50"
+          >
+            <h5 class="">Currency:</h5>
+            <p>{{ props.country.currency }}</p>
+          </div>
+          <div
+            class="d-flex flex-row justify-content-between country-prop text-center align-items-center w-50"
+          >
+            <h5 class="">Continent:</h5>
+            <p>{{ props.country.continent?.name }}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -43,5 +66,8 @@ const countryFlag = `https://flagcdn.com/w2560/${props.country.code.toLowerCase(
 <style lang="css" scoped>
 .navigator-container {
   width: 200px;
+}
+.country-prop p {
+  margin: 0px !important;
 }
 </style>
